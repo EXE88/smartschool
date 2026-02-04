@@ -20,6 +20,7 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
     'rest_framework',
     'drf_spectacular',
+    'basemodels',
 ]
 
 MIDDLEWARE = [
