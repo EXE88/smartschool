@@ -14,6 +14,7 @@ class Student(models.Model):
     subject = models.ForeignKey(Subjects, on_delete=models.CASCADE, blank=False)
     grade = models.ForeignKey(Grades, on_delete=models.CASCADE, blank=False)
     classobj = models.ForeignKey(Classes, on_delete=models.CASCADE, blank=False)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def clean(self):
         super().clean()

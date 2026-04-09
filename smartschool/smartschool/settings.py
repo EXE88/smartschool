@@ -22,6 +22,7 @@ INSTALLED_APPS = [
     'drf_spectacular',
     'basemodels',
     'students',
+    'teachers',
 ]
 
 MIDDLEWARE = [

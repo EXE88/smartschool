@@ -19,7 +19,7 @@ class TeachersAdminForm(forms.ModelForm):
         if students_list.students.filter(pk__in=selected.values("pk")).exists():
             self.add_error(
                 "teachers",
-                "این کاربر قبلا در لیست دانش‌آموزان ثبت شده و نمی‌تواند معلم باشد.",
+                "this user is already registered in Students list and cannot be a teacher.",
             )
         return cleaned
 
@@ -40,7 +40,7 @@ class StudentsAdminForm(forms.ModelForm):
         if teachers_list.teachers.filter(pk__in=selected.values("pk")).exists():
             self.add_error(
                 "students",
-                "این کاربر قبلا در لیست معلمان ثبت شده و نمی‌تواند دانش‌آموز باشد.",
+                "this user is already registered in Teachers list and cannot be a student.",
             )
         return cleaned
 
