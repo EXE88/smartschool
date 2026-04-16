@@ -14,7 +14,15 @@ class TeacherAdmin(admin.ModelAdmin):
 class TeachingAssignmentAdmin(admin.ModelAdmin):
     list_display = ("id", "user", "classobj", "lesson", "created_at")
     list_filter = ("classobj", "lesson", "created_at")
-    search_fields = ("user__firstname", "user__lastname", "classobj__name", "lesson__name")
+    search_fields = (
+        "user__firstname",
+        "user__lastname",
+        "user__nationalcode",
+        "user__user__username",
+        "user__user__email",
+        "classobj__name",
+        "lesson__name",
+    )
     autocomplete_fields = ("user", "classobj", "lesson")
     list_select_related = ("user", "classobj", "lesson")
     ordering = ("-created_at",)

@@ -3,10 +3,13 @@ from django.db import models
 from basemodels.models import Classes, Lessons, Students, Teachers
 
 class TeachingAssignment(models.Model):
-    user = models.ForeignKey('auth.user', on_delete=models.CASCADE)
+    user = models.ForeignKey('Teacher', on_delete=models.CASCADE)
     classobj = models.ForeignKey(Classes, on_delete=models.CASCADE)
     lesson = models.ForeignKey(Lessons, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user} | {self.classobj} | {self.lesson}"
 
     def clean(self):
         super().clean()
@@ -48,3 +51,5 @@ class Teacher(models.Model):
         self.full_clean()
         return super().save(*args, **kwargs)
 
+    def __str__(self):
+        return f"{self.firstname} {self.lastname}".strip()
