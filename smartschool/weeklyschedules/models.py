@@ -7,12 +7,13 @@ from teachers.models import TeachingAssignment
 
 class WeeklySchedule(models.Model):
     class WeekDay(models.TextChoices):
-        SATURDAY = "saturday", "Saturday"
-        SUNDAY = "sunday", "Sunday"
-        MONDAY = "monday", "Monday"
-        TUESDAY = "tuesday", "Tuesday"
-        WEDNESDAY = "wednesday", "Wednesday"
-        THURSDAY = "thursday", "Thursday"
+        SATURDAY = "saturday", "شنبه"
+        SUNDAY = "sunday", "یکشنبه"
+        MONDAY = "monday", "دوشنبه"
+        TUESDAY = "tuesday", "سه‌شنبه"
+        WEDNESDAY = "wednesday", "چهارشنبه"
+        THURSDAY = "thursday", "پنجشنبه"
+        FRIDAY = "friday", "جمعه"
 
     classobj = models.ForeignKey(
         Classes,
