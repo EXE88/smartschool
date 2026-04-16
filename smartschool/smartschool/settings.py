@@ -23,6 +23,7 @@ INSTALLED_APPS = [
     'basemodels',
     'students',
     'teachers',
+    'weeklyschedules',
 ]
 
 MIDDLEWARE = [
