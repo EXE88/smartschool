@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     'attendances',
     'scores',
     'homeworks',
+    'comments',
 ]
 
 MIDDLEWARE = [
