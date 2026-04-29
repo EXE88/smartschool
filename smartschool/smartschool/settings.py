@@ -26,6 +26,7 @@ INSTALLED_APPS = [
     'weeklyschedules',
     'attendances',
     'scores',
+    'homeworks',
 ]
 
 MIDDLEWARE = [
