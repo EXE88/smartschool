@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     'scores',
     'homeworks',
     'comments',
+    'accounts',
 ]
 
 MIDDLEWARE = [
