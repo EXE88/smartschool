@@ -264,5 +264,6 @@ poetry.toml
 pyrightconfig.json
 
 testUI/
+staticfiles/
 
 # End of https://www.toptal.com/developers/gitignore/api/python,django
