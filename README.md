@@ -1,4 +1,4 @@
-﻿# SmartSchool Backend
+﻿# SmartSchool Backend 🎓
 
 SmartSchool is a Django REST backend for a school management system focused on the daily workflows of teachers and students. It provides APIs for scores, homework, attendance, teacher comments, user dashboards, JWT authentication, and OpenAPI documentation.
 
@@ -6,7 +6,7 @@ The frontend can live in a separate project. This repository is intended to be t
 
 ---
 
-## Highlights
+## ✨ Highlights
 
 - Role-aware dashboard API for students, teachers, and staff
 - JWT authentication with refresh tokens
@@ -23,7 +23,7 @@ The frontend can live in a separate project. This repository is intended to be t
 
 ---
 
-## Tech Stack
+## 🧰 Tech Stack
 
 - Python
 - Django
@@ -37,7 +37,7 @@ The frontend can live in a separate project. This repository is intended to be t
 
 ---
 
-## Project Structure
+## 🗂️ Project Structure
 
 ```text
 .
@@ -65,9 +65,9 @@ The frontend can live in a separate project. This repository is intended to be t
 
 ---
 
-## Core Modules
+## 🧩 Core Modules
 
-### Accounts
+### 👤 Accounts
 
 The `accounts` app exposes the current user's dashboard data. It aggregates the user profile, role, stats, scores, homework, attendance records, comments, teaching assignments, and related students.
 
@@ -85,7 +85,7 @@ GET /api/accounts/me/?limit=200
 
 Use `limit=0` to return all records.
 
-### Scores
+### 🏆 Scores
 
 Teachers can create, update, list, and delete student scores based on their teaching assignments. Students can read their own scores.
 
@@ -93,7 +93,7 @@ Teachers can create, update, list, and delete student scores based on their teac
 /api/scores/
 ```
 
-### Homeworks
+### 📚 Homeworks
 
 Teachers can create homework for classes and lessons they teach. Students can see homework for their class.
 
@@ -101,7 +101,7 @@ Teachers can create homework for classes and lessons they teach. Students can se
 /api/homeworks/
 ```
 
-### Attendances
+### 🗓️ Attendances
 
 Attendance records are explicit and support two statuses:
 
@@ -114,7 +114,7 @@ absent
 /api/attendances/
 ```
 
-### Comments
+### 💬 Comments
 
 Teachers can send comments/messages to students. Students can see messages and unread/read state is tracked by the `checked` field.
 
@@ -122,13 +122,13 @@ Teachers can send comments/messages to students. Students can see messages and u
 /api/comments/
 ```
 
-### Weekly Schedules
+### 📅 Weekly Schedules
 
 Weekly schedules define the lessons assigned to each class on each school day and period.
 
 ---
 
-## API Documentation
+## 📖 API Documentation
 
 After running the backend, documentation is available at:
 
@@ -147,7 +147,7 @@ http://127.0.0.1:8000/api/redoc/
 
 ---
 
-## Authentication
+## 🔐 Authentication
 
 The project uses JWT authentication.
 
@@ -182,7 +182,7 @@ Authorization: Bearer your-access-token
 
 ---
 
-## Environment Variables
+## ⚙️ Environment Variables
 
 Copy the sample file:
 
@@ -217,7 +217,7 @@ Notes:
 
 ---
 
-### Django Admin URL
+### 🛡️ Django Admin URL
 
 The Django admin endpoint is configurable through `.env`:
 
@@ -234,7 +234,7 @@ With this value, the admin panel is available at:
 Avoid using the default `/admin/` path in production.
 ---
 
-## Local Development
+## 🧪 Local Development
 
 ### 1. Create virtual environment
 
@@ -299,7 +299,7 @@ http://127.0.0.1:8000/
 
 ---
 
-## Demo Data
+## 🌱 Demo Data
 
 A demo seeder is included:
 
@@ -329,7 +329,7 @@ password: 2
 
 ---
 
-## Production Deployment
+## 🚀 Production Deployment
 
 This project includes an interactive production installer:
 
@@ -357,7 +357,7 @@ The installer can:
 
 No Nginx is configured by this installer. Static files are served by WhiteNoise and the app is served directly by Gunicorn.
 
-### Menu Commands
+### 🧭 Menu Commands
 
 ```bash
 sudo ./deploy/install.sh
@@ -374,7 +374,7 @@ sudo ./deploy/install.sh uninstall
 sudo ./deploy/install.sh rollback
 ```
 
-### Rollback Behavior
+### ♻️ Rollback Behavior
 
 The installer tracks files and directories created during installation and keeps backups of replaced files.
 
@@ -388,7 +388,7 @@ sudo ./deploy/install.sh rollback
 
 ---
 
-## systemd Service
+## 🛠️ systemd Service
 
 The installer creates a service similar to:
 
@@ -406,7 +406,7 @@ sudo journalctl -u smartschool -f
 
 ---
 
-## Gunicorn
+## 🦄 Gunicorn
 
 Gunicorn configuration lives here:
 
@@ -425,7 +425,7 @@ GUNICORN_TIMEOUT=120
 
 ---
 
-## Static Files
+## 📦 Static Files
 
 Static files are collected into:
 
@@ -444,7 +444,7 @@ WhiteNoise is already enabled in `settings.py`.
 
 ---
 
-## Frontend Integration
+## 🔌 Frontend Integration
 
 The frontend is expected to be a separate project.
 
@@ -463,7 +463,7 @@ CORS_ALLOWED_ORIGINS=https://school.example.com,http://localhost:3000
 
 ---
 
-## Useful API Endpoints
+## 🧾 Useful API Endpoints
 
 ```text
 POST /api/token/
@@ -481,7 +481,7 @@ GET  /api/redoc/
 
 ---
 
-## Development Checks
+## ✅ Development Checks
 
 Run Django checks:
 
@@ -504,7 +504,7 @@ python manage.py migrate
 
 ---
 
-## Git Notes
+## 🧹 Git Notes
 
 The repository should not include runtime/generated files such as:
 
@@ -520,7 +520,8 @@ Commit source files, migrations, deployment templates, and documentation.
 
 ---
 
-## License
+## 📄 License
 
-Add your preferred license here before publishing publicly.
+This project is released under the MIT License. See [LICENSE](./LICENSE) for details.
+
 
