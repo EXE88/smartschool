@@ -2,7 +2,7 @@
 
 SmartSchool is a Django REST backend for a school management system focused on the daily workflows of teachers and students. It provides APIs for scores, homework, attendance, teacher comments, user dashboards, JWT authentication, and OpenAPI documentation.
 
-The frontend can live in a separate project. This repository is intended to be the backend/API service.
+The frontend lives in a separate repository: [EXE88/smartschool-UI](https://github.com/EXE88/smartschool-UI). This repository is intended to be the backend/API service.
 
 ---
 
@@ -446,7 +446,11 @@ WhiteNoise is already enabled in `settings.py`.
 
 ## 🔌 Frontend Integration
 
-The frontend is expected to be a separate project.
+The official frontend for this backend is available here:
+
+```text
+https://github.com/EXE88/smartschool-UI
+```
 
 Configure the frontend API base URL to point to this backend, for example:
 
@@ -523,5 +527,7 @@ Commit source files, migrations, deployment templates, and documentation.
 ## 📄 License
 
 This project is released under the MIT License. See [LICENSE](./LICENSE) for details.
+
+
 
 
