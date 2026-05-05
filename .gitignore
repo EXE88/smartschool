@@ -267,3 +267,4 @@ testUI/
 staticfiles/
 
 # End of https://www.toptal.com/developers/gitignore/api/python,django
+.deploy_rollback/

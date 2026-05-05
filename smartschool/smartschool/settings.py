@@ -1,13 +1,44 @@
+import os
 from pathlib import Path
 from datetime import timedelta
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+PROJECT_ROOT = BASE_DIR.parent
 
-SECRET_KEY = 'django-insecure-jp5^v$+^36npl91p2$b9=q*&=ce_+9*_o#*)lxph%0#7f1#zv3'
 
-DEBUG = True
+def _load_env_file():
+    env_file = os.environ.get("DJANGO_ENV_FILE")
+    candidates = [Path(env_file)] if env_file else [PROJECT_ROOT / ".env", BASE_DIR / ".env"]
+    for path in candidates:
+        if not path or not path.exists():
+            continue
+        for raw_line in path.read_text(encoding="utf-8").splitlines():
+            line = raw_line.strip()
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+            key, value = line.split("=", 1)
+            os.environ.setdefault(key.strip(), value.strip().strip('"').strip("'"))
+        break
 
-ALLOWED_HOSTS = ['*']
+
+def _env_bool(name, default=False):
+    return os.environ.get(name, str(default)).strip().lower() in {"1", "true", "yes", "on"}
+
+
+def _env_list(name, default=""):
+    return [item.strip() for item in os.environ.get(name, default).split(",") if item.strip()]
+
+
+_load_env_file()
+
+SECRET_KEY = os.environ.get(
+    "SECRET_KEY",
+    "django-insecure-jp5^v$+^36npl91p2$b9=q*&=ce_+9*_o#*)lxph%0#7f1#zv3",
+)
+
+DEBUG = _env_bool("DEBUG", True)
+
+ALLOWED_HOSTS = _env_list("ALLOWED_HOSTS", "*")
 
 INSTALLED_APPS = [
     'django_daisy',
@@ -124,11 +155,7 @@ SPECTACULAR_SETTINGS = {
 }
 
 
-CORS_ALLOWED_ORIGINS = [
-    'http://localhost:3000',
-    'http://127.0.0.1:3000',
-    'http://localhost:8080',
-    'http://127.0.0.1:8080',
-    'http://127.0.0.1:5500',
-    'http://localhost:5500',
-]
+CORS_ALLOWED_ORIGINS = _env_list(
+    "CORS_ALLOWED_ORIGINS",
+    "http://localhost:3000,http://127.0.0.1:3000,http://localhost:8080,http://127.0.0.1:8080,http://127.0.0.1:5500,http://localhost:5500",
+)
