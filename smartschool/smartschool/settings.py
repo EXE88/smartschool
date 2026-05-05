@@ -40,6 +40,8 @@ DEBUG = _env_bool("DEBUG", True)
 
 ALLOWED_HOSTS = _env_list("ALLOWED_HOSTS", "*")
 
+ADMIN_PATH = os.environ.get("ADMIN_PATH", "admin").strip().strip("/")
+
 INSTALLED_APPS = [
     'django_daisy',
     'django.contrib.admin',

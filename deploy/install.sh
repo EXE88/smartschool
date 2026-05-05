@@ -157,7 +157,7 @@ write_env() {
   backup_file "$ENV_FILE"
   track_created "$ENV_FILE"
 
-  local secret_key debug allowed_hosts cors_origins bind workers threads timeout graceful keepalive loglevel
+  local secret_key debug allowed_hosts cors_origins admin_path bind workers threads timeout graceful keepalive loglevel
   echo -e "${C_MAGENTA}Production environment setup${C_RESET}"
   secret_key="$(prompt 'SECRET_KEY (leave empty to generate)' '')"
   if [[ -z "$secret_key" ]]; then
@@ -166,6 +166,7 @@ write_env() {
   debug="$(prompt 'DEBUG' 'False')"
   allowed_hosts="$(prompt 'ALLOWED_HOSTS comma separated' 'localhost,127.0.0.1')"
   cors_origins="$(prompt 'CORS_ALLOWED_ORIGINS comma separated' 'http://localhost:3000,http://127.0.0.1:3000')"
+  admin_path="$(prompt 'Django admin path without leading/trailing slash' 'secure-admin')"
   bind="$(prompt 'Gunicorn bind' '0.0.0.0:8000')"
   workers="$(prompt 'Gunicorn workers' '3')"
   threads="$(prompt 'Gunicorn threads' '2')"
@@ -179,6 +180,7 @@ SECRET_KEY="$secret_key"
 DEBUG="$debug"
 ALLOWED_HOSTS="$allowed_hosts"
 CORS_ALLOWED_ORIGINS="$cors_origins"
+ADMIN_PATH="$admin_path"
 
 GUNICORN_BIND="$bind"
 GUNICORN_WORKERS="$workers"

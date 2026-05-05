@@ -197,6 +197,7 @@ SECRET_KEY=change-me
 DEBUG=False
 ALLOWED_HOSTS=example.com,127.0.0.1,localhost
 CORS_ALLOWED_ORIGINS=http://example.com,http://127.0.0.1:3000,http://localhost:3000
+ADMIN_PATH=secure-admin
 
 GUNICORN_BIND=0.0.0.0:8000
 GUNICORN_WORKERS=3
@@ -214,6 +215,23 @@ Notes:
 - Add your frontend origin to `CORS_ALLOWED_ORIGINS`.
 - Add your domain/IP to `ALLOWED_HOSTS`.
 
+---
+
+### Django Admin URL
+
+The Django admin endpoint is configurable through `.env`:
+
+```env
+ADMIN_PATH=secure-admin
+```
+
+With this value, the admin panel is available at:
+
+```text
+/secure-admin/
+```
+
+Avoid using the default `/admin/` path in production.
 ---
 
 ## Local Development
@@ -505,3 +523,4 @@ Commit source files, migrations, deployment templates, and documentation.
 ## License
 
 Add your preferred license here before publishing publicly.
+
