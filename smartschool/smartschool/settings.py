@@ -7,7 +7,7 @@ SECRET_KEY = 'django-insecure-jp5^v$+^36npl91p2$b9=q*&=ce_+9*_o#*)lxph%0#7f1#zv3
 
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     'django_daisy',
@@ -33,6 +33,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'smartschool.cors.SimpleCorsMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -121,3 +122,13 @@ SPECTACULAR_SETTINGS = {
     'DESCRIPTION': 'API documentation for SmartSchool backend.',
     'VERSION': '1.0.0',
 }
+
+
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000',
+    'http://127.0.0.1:3000',
+    'http://localhost:8080',
+    'http://127.0.0.1:8080',
+    'http://127.0.0.1:5500',
+    'http://localhost:5500',
+]

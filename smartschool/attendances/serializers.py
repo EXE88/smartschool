@@ -1,4 +1,4 @@
-from rest_framework import serializers
+﻿from rest_framework import serializers
 
 from smartschool.api_utils import FullCleanModelSerializer
 
@@ -19,6 +19,7 @@ class AttendanceSerializer(FullCleanModelSerializer):
         source="teacher_assignment.lesson.name",
         read_only=True,
     )
+    status_label = serializers.CharField(source="get_status_display", read_only=True)
 
     class Meta:
         model = Attendance
@@ -26,6 +27,8 @@ class AttendanceSerializer(FullCleanModelSerializer):
             "id",
             "teacher_assignment",
             "student",
+            "status",
+            "status_label",
             "teacher_name",
             "student_name",
             "class_name",
@@ -34,10 +37,10 @@ class AttendanceSerializer(FullCleanModelSerializer):
         )
         read_only_fields = (
             "id",
+            "status_label",
             "teacher_name",
             "student_name",
             "class_name",
             "lesson_name",
             "created_at",
         )
-

@@ -1,4 +1,4 @@
-from drf_spectacular.utils import OpenApiParameter, extend_schema, extend_schema_view
+﻿from drf_spectacular.utils import OpenApiParameter, extend_schema, extend_schema_view
 from rest_framework import viewsets
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.permissions import IsAuthenticated
@@ -17,12 +17,13 @@ from .serializers import AttendanceSerializer
         parameters=[
             OpenApiParameter("student", int, OpenApiParameter.QUERY),
             OpenApiParameter("teacher_assignment", int, OpenApiParameter.QUERY),
+            OpenApiParameter("status", str, OpenApiParameter.QUERY),
         ],
         tags=["attendances"],
     ),
     create=extend_schema(
         summary="Create attendance",
-        description="Creates an attendance record. Teachers can create records only for their own teaching assignments.",
+        description="Creates an attendance record with status=present or status=absent. Teachers can create records only for their own teaching assignments.",
         tags=["attendances"],
     ),
     retrieve=extend_schema(summary="Retrieve attendance", tags=["attendances"]),
@@ -65,6 +66,10 @@ class AttendanceViewSet(viewsets.ModelViewSet):
         if assignment_id:
             queryset = queryset.filter(teacher_assignment_id=assignment_id)
 
+        status = self.request.query_params.get("status")
+        if status:
+            queryset = queryset.filter(status=status)
+
         return queryset
 
     def _ensure_teacher_can_use_assignment(self, serializer):
@@ -85,3 +90,5 @@ class AttendanceViewSet(viewsets.ModelViewSet):
     def perform_update(self, serializer):
         self._ensure_teacher_can_use_assignment(serializer)
         serializer.save()
+
+

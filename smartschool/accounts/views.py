@@ -1,4 +1,4 @@
-from drf_spectacular.utils import OpenApiParameter, extend_schema
+﻿from drf_spectacular.utils import OpenApiParameter, extend_schema
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
@@ -34,8 +34,11 @@ def _serialize_teacher_profile(teacher):
         "id": teacher.id,
         "firstname": teacher.firstname,
         "lastname": teacher.lastname,
+        "birthdate": teacher.birthdate,
         "nationalcode": teacher.nationalcode,
+        "phonenumber": teacher.phonenumber,
         "role": "teacher",
+        "created_at": teacher.created_at,
     }
 
 
@@ -44,11 +47,16 @@ def _serialize_student_profile(student):
         "id": student.id,
         "firstname": student.firstname,
         "lastname": student.lastname,
+        "birthdate": student.birthdate,
         "nationalcode": student.nationalcode,
         "role": "student",
         "classobj": str(student.classobj),
         "grade": str(student.grade),
         "subject": str(student.subject),
+        "father_phonenumber": student.father_phonenumber,
+        "mother_phonenumber": student.mother_phonenumber,
+        "home_phonenumber": student.home_phonenumber,
+        "created_at": student.created_at,
     }
 
 
@@ -204,6 +212,8 @@ class AccountDashboardAPIView(APIView):
                 "scores_count": scores.count(),
                 "homeworks_count": homeworks.count(),
                 "attendances_count": attendances.count(),
+                "present_attendances_count": attendances.filter(status=Attendance.Status.PRESENT).count(),
+                "absent_attendances_count": attendances.filter(status=Attendance.Status.ABSENT).count(),
                 "comments_count": comments.count(),
                 "unchecked_comments_count": comments.filter(checked=False).count(),
                 "teaching_assignments_count": assignments.count(),
@@ -236,4 +246,7 @@ class AccountDashboardAPIView(APIView):
         if limit == 0:
             return queryset
         return queryset[:limit]
+
+
+
 

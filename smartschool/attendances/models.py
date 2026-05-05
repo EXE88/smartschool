@@ -1,4 +1,4 @@
-from django.core.exceptions import ValidationError
+﻿from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils import timezone
 
@@ -8,6 +8,10 @@ from weeklyschedules.models import WeeklySchedule
 
 
 class Attendance(models.Model):
+    class Status(models.TextChoices):
+        PRESENT = "present", "Present"
+        ABSENT = "absent", "Absent"
+
     teacher_assignment = models.ForeignKey(
         TeachingAssignment,
         on_delete=models.CASCADE,
@@ -18,13 +22,18 @@ class Attendance(models.Model):
         on_delete=models.CASCADE,
         related_name="attendances",
     )
+    status = models.CharField(
+        max_length=10,
+        choices=Status.choices,
+        default=Status.PRESENT,
+    )
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         ordering = ("-created_at",)
 
     def __str__(self):
-        return f"{self.student} | {self.teacher_assignment}"
+        return f"{self.student} | {self.teacher_assignment} | {self.status}"
 
     @staticmethod
     def _weekday_from_date(attendance_date):
