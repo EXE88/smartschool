@@ -146,6 +146,35 @@ prompt() {
   fi
 }
 
+configure_proxy() {
+  echo -e "${C_MAGENTA}Network proxy setup${C_RESET}"
+  read -r -p "Use proxy for downloads/install commands? [y/N]: " use_proxy || true
+  if [[ ! "$use_proxy" =~ ^[Yy]$ ]]; then
+    return 0
+  fi
+
+  local proxy_url no_proxy
+  proxy_url="$(prompt 'Proxy URL (example: http://127.0.0.1:8080 or socks5://127.0.0.1:1080)' '')"
+  if [[ -z "$proxy_url" ]]; then
+    warn "Proxy was enabled but no URL was provided. Continuing without proxy."
+    return 0
+  fi
+
+  no_proxy="$(prompt 'NO_PROXY hosts comma separated' 'localhost,127.0.0.1,::1')"
+
+  export HTTP_PROXY="$proxy_url"
+  export HTTPS_PROXY="$proxy_url"
+  export ALL_PROXY="$proxy_url"
+  export http_proxy="$proxy_url"
+  export https_proxy="$proxy_url"
+  export all_proxy="$proxy_url"
+  export NO_PROXY="$no_proxy"
+  export no_proxy="$no_proxy"
+  export PIP_PROXY="$proxy_url"
+
+  success "Proxy enabled for this installer run."
+}
+
 random_secret() {
   "$PYTHON_BIN" - <<'PY'
 import secrets
@@ -262,8 +291,15 @@ install_app() {
     "$PYTHON_BIN" -m venv "$VENV_DIR"
   fi
 
-  "$VENV_DIR/bin/python" -m pip install --upgrade pip setuptools wheel
-  "$VENV_DIR/bin/pip" install -r "$PROJECT_ROOT/requirements.txt"
+  configure_proxy
+
+  local pip_proxy_args=()
+  if [[ -n "${PIP_PROXY:-}" ]]; then
+    pip_proxy_args=(--proxy "$PIP_PROXY")
+  fi
+
+  "$VENV_DIR/bin/python" -m pip install "${pip_proxy_args[@]}" --upgrade pip setuptools wheel
+  "$VENV_DIR/bin/pip" install "${pip_proxy_args[@]}" -r "$PROJECT_ROOT/requirements.txt"
 
   PYTHON_BIN="$VENV_DIR/bin/python"
   write_env

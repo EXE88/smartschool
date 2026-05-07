@@ -357,6 +357,30 @@ The installer can:
 
 No Nginx is configured by this installer. Static files are served by WhiteNoise and the app is served directly by Gunicorn.
 
+
+### 🌐 Proxy Support
+
+During installation, the script asks whether downloads should use a proxy. This is useful on restricted networks or servers that cannot access Python package indexes directly.
+
+Supported examples:
+
+```text
+http://127.0.0.1:8080
+socks5://127.0.0.1:1080
+http://username:password@proxy.example.com:8080
+```
+
+When enabled, the installer exports these variables for the current installation run:
+
+```text
+HTTP_PROXY
+HTTPS_PROXY
+ALL_PROXY
+NO_PROXY
+```
+
+It also passes the proxy to `pip install` through `--proxy`.
+
 ### 🧭 Menu Commands
 
 ```bash
@@ -527,6 +551,7 @@ Commit source files, migrations, deployment templates, and documentation.
 ## 📄 License
 
 This project is released under the MIT License. See [LICENSE](./LICENSE) for details.
+
 
 
 
