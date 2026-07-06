@@ -85,7 +85,7 @@ ask() {
     else
         printf '%s' "${C_CYAN}?${C_RESET} ${question}: " > /dev/tty
     fi
-    IFS= read -r answer < /dev/tty
+    IFS= read -r -e answer < /dev/tty
     REPLY_VALUE="${answer:-$default}"
 }
 
@@ -95,7 +95,7 @@ ask_yesno() {
     if [ "$default" = "y" ]; then hint="Y/n"; else hint="y/N"; fi
     while true; do
         printf '%s' "${C_CYAN}?${C_RESET} ${question} ${C_DIM}[${hint}]${C_RESET}: " > /dev/tty
-        IFS= read -r answer < /dev/tty
+        IFS= read -r -e answer < /dev/tty
         answer="${answer:-$default}"
         case "$answer" in
             [Yy]*) return 0 ;;
