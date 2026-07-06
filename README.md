@@ -1,50 +1,58 @@
-﻿# SmartSchool Backend 🎓
+<div align="center">
 
-SmartSchool is a Django REST backend for a school management system focused on the daily workflows of teachers and students. It provides APIs for scores, homework, attendance, teacher comments, user dashboards, JWT authentication, and OpenAPI documentation.
+# 🎓 SmartSchool Backend
 
-The frontend lives in a separate repository: [EXE88/smartschool-UI](https://github.com/EXE88/smartschool-UI). This repository is intended to be the backend/API service.
+**A Django REST backend for school management — scores, homework, attendance, comments, schedules, and role-aware dashboards.**
 
----
+[![Python](https://img.shields.io/badge/Python-3.11+-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![Django](https://img.shields.io/badge/Django-6.0-092E20?logo=django&logoColor=white)](https://www.djangoproject.com/)
+[![DRF](https://img.shields.io/badge/DRF-3.16-A30000?logo=django&logoColor=white)](https://www.django-rest-framework.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 
-## ✨ Highlights
+[Features](#-features) • [Quick Start](#-quick-start-production) • [Local Development](#-local-development) • [API Docs](#-api-documentation) • [Installer](#-installer--manager) • [Frontend](https://github.com/EXE88/smartschool-UI)
 
-- Role-aware dashboard API for students, teachers, and staff
-- JWT authentication with refresh tokens
-- RESTful CRUD APIs for core school modules
-- OpenAPI schema, Swagger UI, and Redoc documentation
-- Teacher-to-student comments with read/unread tracking
-- Attendance records with explicit `present` / `absent` status
-- Homework management with due-date validation
-- Score management with validation and permission checks
-- Weekly schedule support for class/lesson planning
-- Production-ready deployment with Gunicorn, systemd, and WhiteNoise
-- Interactive install/management script with rollback support
-- Environment-driven settings through `.env`
+</div>
 
 ---
+
+## 📌 Overview
+
+SmartSchool is the backend/API service of a school management system focused on the daily workflows of **teachers** and **students**. It ships with JWT authentication, OpenAPI documentation, and a one-command production installer with rollback support.
+
+The official frontend lives in a separate repository: **[EXE88/smartschool-UI](https://github.com/EXE88/smartschool-UI)**.
+
+## ✨ Features
+
+- 👤 **Role-aware dashboard API** — one endpoint returns everything the current user needs
+- 🔐 **JWT authentication** with refresh tokens (Simple JWT)
+- 🏆 **Scores** — teachers manage scores for their own teaching assignments
+- 📚 **Homework** — creation with due-date validation, scoped to the teacher's classes
+- 🗓️ **Attendance** — explicit `present` / `absent` records
+- 💬 **Comments** — teacher-to-student messages with read/unread tracking
+- 📅 **Weekly schedules** — per-class, per-day lesson planning
+- 📖 **OpenAPI schema** with Swagger UI and Redoc
+- 🛡️ **Configurable admin path** — hide `/admin/` behind a custom URL
+- 🚀 **Production-ready** — Gunicorn + WhiteNoise + systemd, no Nginx required
+- 🧰 **Interactive installer** — colorful menu, guided `.env` setup, automatic rollback, demo data seeding
 
 ## 🧰 Tech Stack
 
-- Python
-- Django
-- Django REST Framework
-- Simple JWT
-- drf-spectacular
-- SQLite by default
-- Gunicorn
-- WhiteNoise
-- systemd for production service management
-
----
+| Layer | Technology |
+|---|---|
+| Language | Python 3 |
+| Framework | Django 6 + Django REST Framework |
+| Auth | Simple JWT |
+| API docs | drf-spectacular (Swagger / Redoc) |
+| Database | SQLite (default) |
+| App server | Gunicorn |
+| Static files | WhiteNoise |
+| Process manager | systemd |
 
 ## 🗂️ Project Structure
 
 ```text
 .
-├── deploy/
-│   ├── install.sh                 # Production installer and service manager
-│   └── gunicorn/
-│       └── gunicorn.conf.py       # Gunicorn production config
+├── install.sh                     # Interactive installer & manager (Linux)
 ├── smartschool/
 │   ├── accounts/                  # Current-user dashboard API
 │   ├── attendances/               # Attendance and absence records
@@ -55,372 +63,217 @@ The frontend lives in a separate repository: [EXE88/smartschool-UI](https://gith
 │   ├── students/                  # Student profiles
 │   ├── teachers/                  # Teacher profiles and teaching assignments
 │   ├── weeklyschedules/           # Weekly class schedules
-│   ├── smartschool/               # Django project settings/urls/asgi/wsgi
-│   ├── manage.py
-│   └── seed_demo_data.py          # Optional demo data seeder
+│   ├── smartschool/               # Django settings / urls / wsgi / asgi
+│   ├── gunicorn.conf.py           # Gunicorn production config
+│   ├── seed_demo_data.py          # Optional demo data seeder
+│   └── manage.py
 ├── .env.sample
 ├── requirements.txt
 └── README.md
 ```
 
----
+## 🚀 Quick Start (Production)
 
-## 🧩 Core Modules
+On a Linux server with systemd:
 
-### 👤 Accounts
-
-The `accounts` app exposes the current user's dashboard data. It aggregates the user profile, role, stats, scores, homework, attendance records, comments, teaching assignments, and related students.
-
-Main endpoint:
-
-```text
-GET /api/accounts/me/
+```bash
+git clone https://github.com/EXE88/smartschool.git
+cd smartschool
+chmod +x install.sh
+sudo ./install.sh
 ```
 
-Optional query:
+Pick **Full installation** from the menu (or run `sudo ./install.sh install` directly). The installer walks you through everything:
 
-```text
-GET /api/accounts/me/?limit=200
+1. Optional **proxy** setup for restricted networks
+2. **Virtual environment** creation and dependency installation
+3. Guided **`.env` configuration** (auto-generated `SECRET_KEY`, hosts, CORS, admin path, Gunicorn tuning)
+4. Django checks, **migrations**, and **collectstatic**
+5. Optional **superuser** creation and **demo data** seeding
+6. A **systemd service** that starts on boot and auto-restarts on failure
+
+When it finishes, the API is live at your configured bind address (default `0.0.0.0:8000`).
+
+> 💡 If anything fails — or you press `Ctrl+C` mid-install — the installer **rolls back automatically**, so you can re-run it cleanly.
+
+## 🧭 Installer & Manager
+
+`install.sh` is not just an installer — re-run it anytime to manage individual parts without reinstalling:
+
+```bash
+sudo ./install.sh              # interactive menu
 ```
 
-Use `limit=0` to return all records.
+| Command | What it does |
+|---|---|
+| `install` | Full installation |
+| `env` | Reconfigure `.env` interactively |
+| `gunicorn` | Tune Gunicorn (bind, workers, timeouts) |
+| `deps` | (Re)install Python dependencies |
+| `migrate` | Run database migrations |
+| `collectstatic` | Collect static files |
+| `superuser` | Create a Django superuser |
+| `demo-seed` / `demo-remove` | Add or cleanly remove demo data |
+| `status` / `start` / `stop` / `restart` / `logs` | Manage the systemd service |
+| `service` | (Re)create the systemd unit file |
+| `proxy` | Configure a download proxy |
+| `rollback` | Roll back a failed/interrupted installation |
+| `uninstall` | Remove the service and optionally venv / `.env` / static / db |
 
-### 🏆 Scores
+Example:
 
-Teachers can create, update, list, and delete student scores based on their teaching assignments. Students can read their own scores.
-
-```text
-/api/scores/
+```bash
+sudo ./install.sh restart
+sudo ./install.sh logs
+sudo ./install.sh demo-seed
 ```
 
-### 📚 Homeworks
+### ♻️ Rollback
 
-Teachers can create homework for classes and lessons they teach. Students can see homework for their class.
+Every file, directory, and service the installer creates is recorded in a manifest (`.installer/`). Replaced files (like an existing `.env` or database) are backed up first. On failure or `Ctrl+C`, changes are reverted automatically — or manually with:
 
-```text
-/api/homeworks/
+```bash
+sudo ./install.sh rollback
 ```
 
-### 🗓️ Attendances
+### 🌐 Proxy Support
 
-Attendance records are explicit and support two statuses:
-
-```text
-present
-absent
-```
+On restricted networks, the installer can route downloads through a proxy:
 
 ```text
-/api/attendances/
+http://127.0.0.1:8080
+socks5://127.0.0.1:1080
+http://user:pass@proxy.example.com:8080
 ```
 
-### 💬 Comments
+The proxy is exported as `HTTP_PROXY` / `HTTPS_PROXY` / `ALL_PROXY` and passed to `pip --proxy`. It is remembered for later runs and can be changed via `sudo ./install.sh proxy`.
 
-Teachers can send comments/messages to students. Students can see messages and unread/read state is tracked by the `checked` field.
+## ⚙️ Environment Variables
+
+The installer generates `.env` for you, but you can also copy the sample manually:
+
+```bash
+cp .env.sample .env
+```
+
+| Variable | Default | Description |
+|---|---|---|
+| `SECRET_KEY` | — | Django secret key (auto-generated by the installer) |
+| `DEBUG` | `False` | Never enable in production |
+| `ALLOWED_HOSTS` | `127.0.0.1,localhost` | Comma-separated domains/IPs |
+| `CORS_ALLOWED_ORIGINS` | localhost origins | Add your frontend origin |
+| `ADMIN_PATH` | `secure-admin` | Django admin URL path (avoid `admin`) |
+| `GUNICORN_BIND` | `0.0.0.0:8000` | Bind address |
+| `GUNICORN_WORKERS` | `3` | Worker processes |
+| `GUNICORN_THREADS` | `2` | Threads per worker |
+| `GUNICORN_TIMEOUT` | `120` | Request timeout (seconds) |
+| `GUNICORN_GRACEFUL_TIMEOUT` | `30` | Graceful shutdown timeout |
+| `GUNICORN_KEEPALIVE` | `5` | Keep-alive seconds |
+| `GUNICORN_LOG_LEVEL` | `info` | Gunicorn log level |
+
+> `.env` is git-ignored. With `ADMIN_PATH=secure-admin`, the admin panel is served at `/secure-admin/`.
+
+## 🧪 Local Development
+
+```bash
+# 1. Virtual environment
+python -m venv env
+source env/bin/activate          # Linux/macOS
+.\env\Scripts\Activate.ps1       # Windows PowerShell
+
+# 2. Dependencies
+pip install -r requirements.txt
+
+# 3. Environment
+cp .env.sample .env              # set DEBUG=True for development
+
+# 4. Database & admin user
+cd smartschool
+python manage.py migrate
+python manage.py createsuperuser
+
+# 5. Run
+python manage.py runserver
+```
+
+The backend is now available at `http://127.0.0.1:8000/`.
+
+## 🌱 Demo Data
+
+Seed sample data (two grade-11 classes with teachers, students, teaching assignments, and weekly schedules):
+
+```bash
+# via the installer
+sudo ./install.sh demo-seed
+
+# or manually
+cd smartschool
+python manage.py shell -c "exec(open('seed_demo_data.py', encoding='utf-8-sig').read())"
+```
+
+Generated users have numeric usernames with matching passwords:
 
 ```text
-/api/comments/
+username: 1   password: 1
+username: 2   password: 2
 ```
 
-### 📅 Weekly Schedules
+Remove all demo data cleanly (demo users are tagged internally, so real data is untouched):
 
-Weekly schedules define the lessons assigned to each class on each school day and period.
-
----
-
-## 📖 API Documentation
-
-After running the backend, documentation is available at:
-
-```text
-/api/schema/   OpenAPI schema
-/api/docs/     Swagger UI
-/api/redoc/    Redoc UI
+```bash
+sudo ./install.sh demo-remove
 ```
-
-Example local URLs:
-
-```text
-http://127.0.0.1:8000/api/docs/
-http://127.0.0.1:8000/api/redoc/
-```
-
----
 
 ## 🔐 Authentication
 
-The project uses JWT authentication.
-
-Get token:
+The API uses JWT (Bearer) authentication.
 
 ```http
 POST /api/token/
 Content-Type: application/json
 
-{
-  "username": "1",
-  "password": "1"
-}
+{ "username": "1", "password": "1" }
 ```
-
-Refresh token:
 
 ```http
 POST /api/token/refresh/
 Content-Type: application/json
 
-{
-  "refresh": "your-refresh-token"
-}
+{ "refresh": "your-refresh-token" }
 ```
 
-Use access tokens like this:
+Then send requests with:
 
 ```http
 Authorization: Bearer your-access-token
 ```
 
----
+## 📖 API Documentation
 
-## ⚙️ Environment Variables
+Once the server is running:
 
-Copy the sample file:
+| URL | Description |
+|---|---|
+| `/api/docs/` | Swagger UI |
+| `/api/redoc/` | Redoc |
+| `/api/schema/` | Raw OpenAPI schema |
 
-```bash
-cp .env.sample .env
-```
-
-Available variables:
-
-```env
-SECRET_KEY=change-me
-DEBUG=False
-ALLOWED_HOSTS=example.com,127.0.0.1,localhost
-CORS_ALLOWED_ORIGINS=http://example.com,http://127.0.0.1:3000,http://localhost:3000
-ADMIN_PATH=secure-admin
-
-GUNICORN_BIND=0.0.0.0:8000
-GUNICORN_WORKERS=3
-GUNICORN_THREADS=2
-GUNICORN_TIMEOUT=120
-GUNICORN_GRACEFUL_TIMEOUT=30
-GUNICORN_KEEPALIVE=5
-GUNICORN_LOG_LEVEL=info
-```
-
-Notes:
-
-- `.env` is ignored by Git.
-- `DEBUG=False` is recommended for production.
-- Add your frontend origin to `CORS_ALLOWED_ORIGINS`.
-- Add your domain/IP to `ALLOWED_HOSTS`.
-
----
-
-### 🛡️ Django Admin URL
-
-The Django admin endpoint is configurable through `.env`:
-
-```env
-ADMIN_PATH=secure-admin
-```
-
-With this value, the admin panel is available at:
+### Main Endpoints
 
 ```text
-/secure-admin/
+POST /api/token/            obtain JWT
+POST /api/token/refresh/    refresh JWT
+GET  /api/accounts/me/      current-user dashboard (?limit=200, limit=0 for all)
+
+/api/scores/                score CRUD
+/api/homeworks/             homework CRUD
+/api/attendances/           attendance records
+/api/comments/              teacher → student comments
 ```
-
-Avoid using the default `/admin/` path in production.
----
-
-## 🧪 Local Development
-
-### 1. Create virtual environment
-
-```bash
-python -m venv env
-```
-
-Activate it:
-
-```bash
-# Linux/macOS
-source env/bin/activate
-
-# Windows PowerShell
-.\env\Scripts\Activate.ps1
-```
-
-### 2. Install dependencies
-
-```bash
-pip install -r requirements.txt
-```
-
-### 3. Create `.env`
-
-```bash
-cp .env.sample .env
-```
-
-For local development, you can use:
-
-```env
-DEBUG=True
-ALLOWED_HOSTS=localhost,127.0.0.1
-CORS_ALLOWED_ORIGINS=http://localhost:3000,http://127.0.0.1:3000
-```
-
-### 4. Run migrations
-
-```bash
-cd smartschool
-python manage.py migrate
-```
-
-### 5. Create admin user
-
-```bash
-python manage.py createsuperuser
-```
-
-### 6. Run server
-
-```bash
-python manage.py runserver
-```
-
-Backend will be available at:
-
-```text
-http://127.0.0.1:8000/
-```
-
----
-
-## 🌱 Demo Data
-
-A demo seeder is included:
-
-```bash
-cd smartschool
-python manage.py shell -c "exec(open('seed_demo_data.py', encoding='utf-8-sig').read())"
-```
-
-It creates sample data for:
-
-- Grade 11 mathematics class
-- Grade 11 experimental science class
-- Teachers
-- Students
-- Teaching assignments
-- Weekly schedules
-
-Generated users use numeric usernames and passwords:
-
-```text
-username: 1
-password: 1
-
-username: 2
-password: 2
-```
-
----
-
-## 🚀 Production Deployment
-
-This project includes an interactive production installer:
-
-```bash
-sudo ./deploy/install.sh
-```
-
-Before running it, make sure the script is executable:
-
-```bash
-chmod +x deploy/install.sh
-```
-
-The installer can:
-
-- Create or reuse a Python virtual environment
-- Install dependencies
-- Generate `.env`
-- Run `manage.py check`
-- Run migrations
-- Run `collectstatic`
-- Create a Gunicorn systemd service
-- Start and enable the service
-- Roll back on failure or interruption
-
-No Nginx is configured by this installer. Static files are served by WhiteNoise and the app is served directly by Gunicorn.
-
-
-### 🌐 Proxy Support
-
-During installation, the script asks whether downloads should use a proxy. This is useful on restricted networks or servers that cannot access Python package indexes directly.
-
-Supported examples:
-
-```text
-http://127.0.0.1:8080
-socks5://127.0.0.1:1080
-http://username:password@proxy.example.com:8080
-```
-
-When enabled, the installer exports these variables for the current installation run:
-
-```text
-HTTP_PROXY
-HTTPS_PROXY
-ALL_PROXY
-NO_PROXY
-```
-
-It also passes the proxy to `pip install` through `--proxy`.
-
-### 🧭 Menu Commands
-
-```bash
-sudo ./deploy/install.sh
-```
-
-Or run actions directly:
-
-```bash
-sudo ./deploy/install.sh install
-sudo ./deploy/install.sh status
-sudo ./deploy/install.sh restart
-sudo ./deploy/install.sh logs
-sudo ./deploy/install.sh uninstall
-sudo ./deploy/install.sh rollback
-```
-
-### ♻️ Rollback Behavior
-
-The installer tracks files and directories created during installation and keeps backups of replaced files.
-
-If installation fails or is interrupted with `Ctrl+C`, it attempts to roll back automatically.
-
-If the SSH session or server process is interrupted, run:
-
-```bash
-sudo ./deploy/install.sh rollback
-```
-
----
 
 ## 🛠️ systemd Service
 
-The installer creates a service similar to:
-
-```text
-/etc/systemd/system/smartschool.service
-```
-
-Common commands:
+The installer creates `/etc/systemd/system/smartschool.service` with `Restart=always`, so the app survives crashes and server reboots. Manage it via the installer or directly:
 
 ```bash
 sudo systemctl status smartschool
@@ -428,131 +281,46 @@ sudo systemctl restart smartschool
 sudo journalctl -u smartschool -f
 ```
 
----
-
-## 🦄 Gunicorn
-
-Gunicorn configuration lives here:
-
-```text
-deploy/gunicorn/gunicorn.conf.py
-```
-
-It reads runtime values from `.env`:
-
-```env
-GUNICORN_BIND=0.0.0.0:8000
-GUNICORN_WORKERS=3
-GUNICORN_THREADS=2
-GUNICORN_TIMEOUT=120
-```
-
----
-
-## 📦 Static Files
-
-Static files are collected into:
-
-```text
-smartschool/staticfiles/
-```
-
-This directory should not be committed. It can always be regenerated:
-
-```bash
-cd smartschool
-python manage.py collectstatic --noinput
-```
-
-WhiteNoise is already enabled in `settings.py`.
-
----
+Gunicorn configuration lives in [smartschool/gunicorn.conf.py](smartschool/gunicorn.conf.py) and reads its runtime values from `.env`. Static files are served by WhiteNoise directly from Gunicorn — no Nginx required.
 
 ## 🔌 Frontend Integration
 
-The official frontend for this backend is available here:
+The official frontend: **[EXE88/smartschool-UI](https://github.com/EXE88/smartschool-UI)**
 
-```text
-https://github.com/EXE88/smartschool-UI
-```
-
-Configure the frontend API base URL to point to this backend, for example:
-
-```text
-http://127.0.0.1:8000
-https://api.example.com
-```
-
-Also add the frontend origin to `.env`:
+1. Point the frontend's API base URL at this backend (e.g. `https://api.example.com`)
+2. Add the frontend origin to `.env`:
 
 ```env
 CORS_ALLOWED_ORIGINS=https://school.example.com,http://localhost:3000
 ```
 
----
-
-## 🧾 Useful API Endpoints
-
-```text
-POST /api/token/
-POST /api/token/refresh/
-GET  /api/accounts/me/
-GET  /api/schema/
-GET  /api/docs/
-GET  /api/redoc/
-
-/api/scores/
-/api/homeworks/
-/api/attendances/
-/api/comments/
-```
-
----
-
 ## ✅ Development Checks
-
-Run Django checks:
 
 ```bash
 cd smartschool
 python manage.py check
-```
-
-Check for missing migrations:
-
-```bash
 python manage.py makemigrations --check --dry-run
-```
-
-Run migrations:
-
-```bash
 python manage.py migrate
 ```
 
----
-
 ## 🧹 Git Notes
 
-The repository should not include runtime/generated files such as:
+Runtime/generated files are ignored and should never be committed:
 
 ```text
 .env
 env/
 smartschool/db.sqlite3
 smartschool/staticfiles/
-.deploy_rollback/
+.installer/
 ```
-
-Commit source files, migrations, deployment templates, and documentation.
-
----
 
 ## 📄 License
 
-This project is released under the MIT License. See [LICENSE](./LICENSE) for details.
+Released under the **MIT License** — see [LICENSE](./LICENSE) for details.
 
+---
 
-
-
-
+<div align="center">
+Made with ❤️ for schools — <a href="https://github.com/EXE88/smartschool-UI">frontend repo</a>
+</div>
